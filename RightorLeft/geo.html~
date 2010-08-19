@@ -1,0 +1,12 @@
+<div>
+
+<form method="post" id="" action="./">
+  <input type="text" id="ad1"  name="ad1" value="" />
+  <input type="text" id="ad2" name="ad2" value="" />
+  <input type="submit" value="位置" />
+</form>
+
+<p>{{ message }}</p>
+
+
+</div>
