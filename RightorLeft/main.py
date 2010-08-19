@@ -1,13 +1,16 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import wsgiref.handlers
 from google.appengine.ext import db
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp \
     import template
 from google.appengine.api import urlfetch
-import json
+from django.utils import simplejson
 from webob import Request
 import cgi
+
 
 #google_appengine/dev_appserver.py ./guestbook
 #
@@ -21,7 +24,7 @@ class GoogleMapGeo():
         self.place = address
         doc = urlfetch.fetch(url)
         if doc.status_code  == 200:
-            json_ob = json.loads(doc.content)
+            json_ob = simplejson.loads(doc.content)
             if json_ob['Status']['code'] != 602:
                 self.lng = float(json_ob['Placemark'][0]['Point']['coordinates'][0])
                 self.lat = float(json_ob['Placemark'][0]['Point']['coordinates'][1])
@@ -31,10 +34,10 @@ class GoogleMapGeo():
                 self.result = 0
         else:
             self.result = 0
-#asdasdasd
-#sadas
+
 class GoogleGeo(webapp.RequestHandler):
     def __calc_pos(self,p1,p2):
+        encoding = 'utf-8'
         if p1.result==1 and p2.result==1:
             if p2.lat == p1.lat and p2.lng == p1.lng:
                 text = "同じ場所です"
@@ -62,16 +65,17 @@ class GoogleGeo(webapp.RequestHandler):
         p2 = GoogleMapGeo(ad2.encode(encoding))
         text = self.__calc_pos(p1,p2)
         self.response.out.write(
-            template.render('geo.html',
+            template.render('index.html',
                             {'message':text}))
 
 
     def get(self):
+        encoding = 'utf-8'
         p1 = GoogleMapGeo("鳥取")
         p2 = GoogleMapGeo("島根")
         text = self.__calc_pos(p1,p2)
         self.response.out.write(
-            template.render('geo.html',
+            template.render('./index.html',
                             {'message':text}))
 
 def main():
